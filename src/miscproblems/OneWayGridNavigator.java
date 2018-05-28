@@ -20,20 +20,27 @@ public class OneWayGridNavigator {
 
     public static void main(String[] args) {
         //Hardcode length and height for now
-        final int LENGTH = 5;
-        final int HEIGHT = 6;
+        final int LENGTH = 1;
+        final int HEIGHT = 1;
 
+        int numPaths = findPaths(LENGTH, HEIGHT);
+        
+        System.out.println("Number of paths " + numPaths);
+    }
+
+    static int findPaths(final int LENGTH, final int HEIGHT) {
         List<Character> pathArray = new ArrayList<Character>();
-
+        
         OneWayGridNavigator op = new OneWayGridNavigator();
 
         String simplestPath = constructSimplestPath(LENGTH, HEIGHT);
 
-        Set<String> permutations = op.permute(simplestPath, 0, simplestPath.length() - 1);
-        System.out.println(permutations.size());
+        Set<String> permutations = op.permute(simplestPath);
+        
         for (String w : permutations) {
             System.out.println(w);
         }
+        return permutations.size();
     }
 
     /**
@@ -42,7 +49,8 @@ public class OneWayGridNavigator {
      * lt)
      */
     private Set<String> permute(String word) {
-        return permute(word, 0, word.length() - 1);
+        Set<String> results = new HashSet<String>();
+        return permute(word, 0, word.length() - 1, results);
     }
 
     /**
@@ -52,14 +60,14 @@ public class OneWayGridNavigator {
      * Idea : Fix a letter, bring it to the front. Recursively permute the 
      * remaining letters. Swap back the fixed letter. Repeat for all letters.
      */
-    private Set<String> permute(String word, int st, int lt) {
-        Set<String> results = new HashSet<String>();
+    private Set<String> permute(String word, int st, int lt, Set<String> results) {
+        //Set<String> results = new HashSet<String>();
         if (st == lt) {
             results.add(word);
         }
         for (int i = st; i <= lt; i++) {
             word = swap(word, st, i);
-            permute(word, st + 1, lt);
+            permute(word, st + 1, lt, results);
             word = swap(word, st, i);
         }
         return results;
@@ -71,6 +79,9 @@ public class OneWayGridNavigator {
      * Returns a String with the path.
      */
     private static String constructSimplestPath(final int LENGTH, final int HEIGHT) {
+        //Added to clear one side 0 lenght test case
+        if (LENGTH * HEIGHT == 0) return "";
+                
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < LENGTH; i++) {
             sb.append("R");

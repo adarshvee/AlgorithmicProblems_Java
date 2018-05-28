@@ -87,7 +87,7 @@ public class OneWayGridNavigator {
             sb.append("R");
         }
         for (int i = 0; i < HEIGHT; i++) {
-            sb.append("L");
+            sb.append("U");
         }
         return sb.toString();
     }
